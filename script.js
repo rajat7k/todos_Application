@@ -1,6 +1,21 @@
-
-let currentTodo=0;
 let todoListItem=document.getElementById('todoListItem');
+let todoArr=[];
+let currentTodo=todoArr.length
+
+function saveTodoList(){
+    localStorage.clear("todoListData");
+    localStorage.setItem("todoListData",JSON.stringify(todoArr));
+    console.log(todoArr);
+}
+
+let getDataFromLocal=JSON.parse(localStorage.getItem("todoListData"));
+console.log(getDataFromLocal);
+if(getDataFromLocal!==null){
+    todoArr=getDataFromLocal;
+todoArr.forEach(element => {
+    addTodoToList(element);
+});
+}
 
 function addTodo(){
     let task=document.getElementById('todo-input').value;
@@ -12,6 +27,7 @@ function addTodo(){
         task:task
     }
     currentTodo+=1;
+    todoArr.push(currentTaskObject);
     addTodoToList(currentTaskObject);
     
 }
@@ -54,7 +70,13 @@ function addTodoToList(todo) {
 // deleteIcon
    let deleteIcon=document.createElement("i");
    deleteIcon.classList.add("far", "fa-trash-alt", "delete-icon");
-    deleteIcon.onclick = ()=>todoListItem.removeChild(document.getElementById(todoId));
+
+    deleteIcon.onclick = ()=>{
+        todoListItem.removeChild(document.getElementById(todoId));
+
+        // delete todoItem From array 
+        todoArr.splice(todoArr.findIndex((ele)=>ele.todoId===todoId));
+    }
 
 
     // packing item 
@@ -69,6 +91,4 @@ function addTodoToList(todo) {
    todoItem.appendChild(todoItemBox);
 
    todoListItem.appendChild(todoItem);
-
-
 }
